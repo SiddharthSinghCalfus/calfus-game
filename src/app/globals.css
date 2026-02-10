@@ -1,26 +1,225 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Full Sombrero-style theme (from sombrero/src/app/globals.css). Use class "dark" on html for dark. */
+
+@theme {
+  /* Background - Light (default) */
+  --color-bg-100: oklch(0.9523 0.0035 19.36);
+  --color-bg-200: oklch(1 0 0);
+  --color-bg-700: oklch(1 0 0);
+  --color-bg-800: oklch(0.9726 0 0);
+  --color-bg-900: oklch(1 0 0);
+  --color-bg-1000: #ffffff;
+  --color-bg-1100: oklch(0.9025 0.1165 340.51);
+  --color-bg-1200: oklch(0.8836 0.1285 144.12);
+  --color-bg-1300: oklch(0.9522 0.053 143.89);
+  --color-bg-1400: oklch(0.9787 0.0267 89.84);
+  --color-bg-secondary-100: oklch(0.6348 0.1385 25.66);
+  --color-bg-secondary-10010: rgba(223, 113, 97, 0.1);
+  --color-bg-secondary-200: oklch(0.7128 0.1195 27.29);
+  --color-bg-300: oklch(1 0 0);
+  --color-bg-400: oklch(1 0 0);
+  --color-bg-500: oklch(1 0 0);
+  --color-bg-600: oklch(0.9726 0 0);
+
+  /* Search input - Light */
+  --search-pill-bg: #ffffff;
+  --search-pill-border: #d9d9d9;
+  --search-pill-hover-border: #c7c7c7;
+  --search-pill-text: #535353;
+
+  /* Content - Light */
+  --color-content-primary-100: oklch(0.7186 0.0935 21.18);
+  --color-content-secondary-100: oklch(0.6348 0.1385 25.66);
+  --color-content-100: #2e2e2e;
+  --color-content-200: oklch(0.4521 0.0095 286.72);
+  --color-content-300: oklch(0.5494 0.0078 286.91);
+  --color-content-400: oklch(0.6059 0.0504 18.01);
+  --color-content-500: oklch(0.5383 0.1522 328.36);
+  --color-content-600: oklch(0.4772 0.1315 156.57);
+  --color-content-700: oklch(0.719 0.0959 33.9);
+
+  /* Border - Light */
+  --color-border-100: #d9d9d9;
+  --color-border-200: oklch(0.687 0 0);
+  --color-border-300: oklch(87.84% 0 0 / 0);
+  --color-border-400: #d9d9d9;
+
+  /* Alert - Light */
+  --color-alert-content-100: oklch(0.552 0.1766 142.5);
+  --color-alert-content-200: oklch(0.8028 0.1377 84.01);
+  --color-alert-border-100: oklch(0.552 0.1766 142.5);
+  --color-alert-border-200: oklch(0.8028 0.1377 84.01);
+
+  /* Graph - Light */
+  --graph-text: var(--color-content-200);
+  --graph-text-muted: var(--color-content-300);
+  --graph-text-primary: var(--color-content-100);
+  --graph-background: var(--color-bg-200);
+  --graph-background-paper: var(--color-bg-200);
+  --graph-border: var(--color-border-100);
+  --graph-border-light: var(--color-border-100);
+  --graph-grid: rgba(217, 217, 217, 0.3);
+  --graph-tooltip-background: var(--color-bg-200);
+  --graph-tooltip-border: var(--color-border-100);
+  --graph-tooltip-text: var(--color-content-100);
+  --graph-cursor-fill: rgba(83, 83, 83, 0.1);
+  --graph-cursor-stroke: rgba(83, 83, 83, 0.3);
+  --graph-color-1: hsl(340, 50%, 55%);
+  --graph-color-2: hsl(160, 50%, 45%);
+  --graph-color-3: hsl(32, 70%, 55%);
+  --graph-color-4: hsl(220, 60%, 55%);
+  --graph-color-5: hsl(280, 50%, 55%);
+  --graph-color-6: hsl(200, 60%, 50%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --color-bg-100: oklch(0.2615 0.0176 251.01);
+  --color-bg-200: oklch(0.2905 0.0228 250.86);
+  --color-bg-700: oklch(0.2557 0.0196 248.28);
+  --color-bg-800: oklch(0.3296 0.0201 250.53);
+  --color-bg-900: oklch(0.4314 0.0178 251.35);
+  --color-bg-1000: #ffffff1a;
+  --color-bg-1100: oklch(0.6268 0.2214 337.61);
+  --color-bg-1200: oklch(0.6146 0.1525 142.6);
+  --color-bg-1300: oklch(0.4184 0.0273 209.55);
+  --color-bg-1400: oklch(0.4264 0.0097 234.88);
+  --color-bg-secondary-100: oklch(1 0 0);
+  --color-bg-secondary-10010: rgba(223, 113, 97, 0.1);
+  --color-bg-secondary-200: oklch(0.9353 0.0398 26.05);
+  --color-bg-300: #191e22;
+  --color-bg-400: #1e2326;
+  --color-bg-500: oklch(0.3296 0.0201 250.53);
+  --color-bg-600: oklch(0.2947 0.022 250.96);
+
+  --search-pill-bg: #191e22;
+  --search-pill-border: #343b41;
+  --search-pill-hover-border: #3e464c;
+  --search-pill-text: #f6f6f6;
+
+  --color-content-primary-100: oklch(0.7714 0.1099 14.88);
+  --color-content-secondary-100: oklch(0.7264 0.1246 26.25);
+  --color-content-100: #ffffff;
+  --color-content-200: oklch(0.819 0.0058 286.86);
+  --color-content-300: oklch(0.7141 0.0052 286.83);
+  --color-content-400: oklch(0.6059 0.0504 18.01);
+  --color-content-500: oklch(0.5383 0.1522 328.36);
+  --color-content-600: oklch(0.4772 0.1315 156.57);
+  --color-content-700: oklch(0.719 0.0959 33.9);
+
+  --color-border-100: #d9d9d900;
+  --color-border-200: oklch(0.5489 0.0057 286.84);
+  --color-border-300: oklch(0.31 0.04 250);
+  --color-border-400: #202d37;
+
+  --color-alert-content-100: oklch(0.552 0.1766 142.5);
+  --color-alert-content-200: oklch(0.8379 0.1299 83.74);
+  --color-alert-border-100: oklch(0.687 0.137 150.97);
+  --color-alert-border-200: oklch(0.8379 0.1299 83.74);
+
+  --graph-text: var(--color-content-200);
+  --graph-text-muted: var(--color-content-300);
+  --graph-text-primary: var(--color-content-100);
+  --graph-background: var(--color-bg-300);
+  --graph-background-paper: var(--color-bg-800);
+  --graph-border: var(--color-border-200);
+  --graph-border-light: var(--color-border-400);
+  --graph-grid: rgba(169, 169, 169, 0.2);
+  --graph-tooltip-background: var(--color-bg-800);
+  --graph-tooltip-border: var(--color-border-300);
+  --graph-tooltip-text: var(--color-content-200);
+  --graph-cursor-fill: rgba(246, 246, 246, 0.1);
+  --graph-cursor-stroke: rgba(246, 246, 246, 0.3);
+  --graph-color-1: hsl(340, 70%, 65%);
+  --graph-color-2: hsl(160, 60%, 50%);
+  --graph-color-3: hsl(32, 80%, 60%);
+  --graph-color-4: hsl(220, 70%, 65%);
+  --graph-color-5: hsl(280, 60%, 65%);
+  --graph-color-6: hsl(200, 70%, 60%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .shadow-elevated-card {
+    border-radius: 16px;
+    box-shadow: 0 0 12px 0 rgba(35, 35, 35, 0.15);
+  }
+
+  .avatar-surface {
+    background-color: var(--avatar-bg, var(--color-bg-1100));
+    color: var(--avatar-text, var(--color-content-100));
+  }
+
+  /* Glassmorphism / dynamic AI vibe */
+  .glass-card {
+    background: rgba(23, 32, 39, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-card-bright {
+    background: rgba(30, 37, 43, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(83, 163, 55, 0.2);
+    box-shadow: 0 0 24px rgba(83, 163, 55, 0.08);
+  }
+
+  .glow-ai {
+    box-shadow: 0 0 20px rgba(83, 163, 55, 0.25), 0 0 40px rgba(83, 163, 55, 0.1);
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
   }
 }
 
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 20px rgba(83, 163, 55, 0.25); }
+  50% { opacity: 0.9; box-shadow: 0 0 28px rgba(83, 163, 55, 0.35); }
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-100);
+  color: var(--color-content-100);
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Background layer 1: holo-blobs GIF (animated, dynamic AI / cyberpunk feel) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("/holo-blobs.gif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Background layer 2: Aetherion logo (white), small, bottom-left, bright & visible */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("/aetherion-logo-white.png");
+  background-size: 14%;
+  background-position: left 1.5rem bottom 1.5rem;
+  background-repeat: no-repeat;
+  opacity: 0.38;
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.15));
+  pointer-events: none;
+  z-index: 0;
 }
