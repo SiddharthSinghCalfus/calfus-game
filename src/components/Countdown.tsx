@@ -16,7 +16,7 @@ export function Countdown() {
   if (phase === "idle" || currentQuestion == null) {
     return (
       <div className="rounded-xl border border-border-400 bg-bg-800 px-4 py-3 text-content-300 text-sm">
-        Quiz not started yet.
+        Round not started yet.
       </div>
     );
   }

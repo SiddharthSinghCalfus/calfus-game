@@ -68,9 +68,9 @@ export function AdminControls() {
         </Link>
       </div>
 
-      {/* Quiz control: start, end timer, next question, reset */}
+      {/* Round control: start, end timer, next question, reset */}
       <section className="rounded-xl border border-border-400 bg-bg-800 p-4 shadow-elevated-card">
-        <h2 className="text-content-200 mb-3 font-medium">Quiz control</h2>
+        <h2 className="text-content-200 mb-3 font-medium">Round control</h2>
         <div className="flex flex-wrap gap-3">
           {phase === "idle" && (
             <button
@@ -100,13 +100,13 @@ export function AdminControls() {
               className="inline-flex items-center gap-2 rounded-lg border border-alert-content-100 bg-bg-800 px-4 py-2 text-alert-content-100 text-sm hover:bg-bg-700"
             >
               <SkipForward className="h-4 w-4" />
-              {phase === "q1" ? "Next question (Q2)" : "End quiz"}
+              {phase === "q1" ? "Next question (Q2)" : "End round"}
             </button>
           )}
         </div>
         <p className="text-content-300 mt-2 text-xs">
           Current: {phase === "idle" ? "No question" : `Question ${currentQuestion}`}
-          {phase !== "idle" && timerExpired && " — Time's up. Assign points below, then click Next question."}
+          {phase !== "idle" && timerExpired && " — Time's up. Assign points below, then click Next question or End round."}
         </p>
       </section>
 

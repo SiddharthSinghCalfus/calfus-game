@@ -2,17 +2,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 **Neural Arena** — Humans vs. AI • Live leaderboard. Public view at `/`, admin at `/admin`, play at `/play`.
 
-## Quiz flow (backend-driven)
+## Game flow (backend-driven)
 
 - **Backend:** Game state lives in **`backend/`** (in-memory store) and is exposed via **`src/app/api/game/`** (Next.js API routes). One source of truth so admin and teams stay in sync.
-- **Admin starts the quiz:** Only the admin can start. On **`/admin`**, click **"Start Question 1 (3 min timer)"**. The question and a 3-minute timer become visible to everyone on **`/play`**.
+- **Host starts the round:** Only the admin can start. On **`/admin`**, click **"Start Question 1 (3 min timer)"**. The question and a 3-minute timer become visible to everyone on **`/play`**.
 - **Teams answer:** Teams log in at **`/login`** (Team 1–4; credentials in `src/lib/auth.ts`). On **`/play`** they see the current question and submit their answer. Timer is fixed at 3 minutes (no options).
-- **After timer ends:** On the admin screen, all answers for that question are shown. Admin manually adds points for each team (and AI) using the **Add points** section, then clicks **"Next question (Q2)"** (or **"End quiz"** after Q2).
-- **Question 2:** Same process: question + 3 min timer, teams submit, admin sees answers and assigns points, then **End quiz**.
-- **Admin controls (production):** **End timer / Mark complete** — stops the current question timer immediately. **Next question** — move to Q2 or end quiz. **Add / remove points** — +10/+20/+50, −10/−20/−50, and **Clear** (set that team’s score to 0). **Reset game** — full reset: all scores go to 0, submissions and phase cleared, so you can run another round without redeploying.
+- **After timer ends:** On the admin screen, all answers for that question are shown. Admin manually adds points for each team (and AI) using the **Add points** section, then clicks **"Next question (Q2)"** (or **"End round"** after Q2).
+- **Question 2:** Same process: question + 3 min timer, teams submit, admin sees answers and assigns points, then **End round**.
+- **Round control:** **End timer / Mark complete** — stops the current question timer immediately. **Next question** — move to Q2 or end round. **Add / remove points** — +10/+20/+50, −10/−20/−50, and **Clear** (set that team’s score to 0). **Reset game** — full reset: all scores go to 0, submissions and phase cleared, so you can run another round without redeploying.
 - **Admin sees answers immediately:** Answers for the current question are visible to the admin as soon as anyone submits. Participants still see answers only after the timer ends (no copying).
 - **Answers visible only after timer:** Teams’ answers appear in the public feed and on admin only **after** that question’s timer has ended (or admin clicked End timer), so no one can copy another team’s answer during the round.
-- **Score confirmation:** When admin adds points (+10 / +20 / +50), a brief “Added +10 to Team 1” message appears for 2 seconds so you know it registered.
+- **Score confirmation:** When admin adds points (+10 / +20 / +50), a brief “Added +10 to Team 1” message appears for 2 seconds.
 - **Leaderboard:** Sorted by points descending (highest first).
 
 ## Backend folder
@@ -39,7 +39,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Auth uses a single user in localStorage, so one login overwrites the other in the same browser. To act as both admin and a team:
 
-1. **Normal window** — Log in as **Admin** (password in `src/lib/auth.ts`). Use for `/admin` (start quiz, add points, next question).
+1. **Normal window** — Log in as **Admin** (password in `src/lib/auth.ts`). Use for `/admin` (start round, add points, next question).
 2. **Incognito/Private window** — Same URL in a private window. Log in as **Team 1** (password in `src/lib/auth.ts`). Use for `/play` (see question, submit answer).
 
 Each window has its own storage. To test more teams, use another incognito window or browser and log in as Team 2, etc.

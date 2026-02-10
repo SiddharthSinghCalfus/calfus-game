@@ -41,7 +41,7 @@ export default function Home() {
           href="/play"
           className="text-content-200 text-sm font-medium hover:text-content-100"
         >
-          Go to question screen →
+          Go to round →
         </Link>
       </div>
 
