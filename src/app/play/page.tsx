@@ -44,19 +44,25 @@ export default function PlayPage() {
   const question = questions.find((q) => q.num === currentQuestion) as QuestionWithMeta | undefined;
   const timerExpired = timeRemainingMs !== null && timeRemainingMs <= 0;
 
-  // Pre-fill submission when question has answerFormat (string) but no answerFields
+  // Reset form only when the question number changes (not on every state poll, which would clear typed answers)
   useEffect(() => {
-    if (question?.answerFields != null) {
-      setFieldValues(question.answerFields.map(() => ""));
+    if (currentQuestion == null) {
       setAnswer("");
-    } else if (question?.answerFormat != null) {
-      setAnswer(question.answerFormat);
+      setFieldValues([]);
+      return;
+    }
+    const q = questions.find((qu) => qu.num === currentQuestion) as QuestionWithMeta | undefined;
+    if (q?.answerFields != null) {
+      setFieldValues(q.answerFields.map(() => ""));
+      setAnswer("");
+    } else if (q?.answerFormat != null) {
+      setAnswer(q.answerFormat);
       setFieldValues([]);
     } else {
       setAnswer("");
       setFieldValues([]);
     }
-  }, [currentQuestion, question?.num, question?.answerFormat, question?.answerFields]);
+  }, [currentQuestion]); // eslint-disable-line react-hooks/exhaustive-deps -- only reset when question changes, not when questions ref changes from poll
 
   const alreadyAnswered =
     user?.role === "team" &&

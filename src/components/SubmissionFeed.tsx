@@ -31,13 +31,13 @@ export function SubmissionFeed() {
           Shown only after each question&apos;s timer ends
         </p>
       </div>
-      <div className="max-h-64 overflow-y-auto p-2">
+      <div className="max-h-96 overflow-y-auto p-2">
         {visible.length === 0 ? (
           <p className="p-4 text-content-300 text-sm">
             No answers visible yet. Answers appear when the timer for that question ends.
           </p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {visible.map((s) => (
               <li
                 key={s.id}
@@ -52,7 +52,9 @@ export function SubmissionFeed() {
                   <span className="font-medium">{s.teamName}</span>
                   <span>Q{s.questionNum}</span>
                 </div>
-                <p className="mt-1 truncate text-content-200">{s.answerSnippet}</p>
+                <p className="mt-2 whitespace-pre-wrap break-words text-content-200 text-xs leading-relaxed">
+                  {s.answerSnippet}
+                </p>
               </li>
             ))}
           </ul>

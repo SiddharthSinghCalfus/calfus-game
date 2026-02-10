@@ -119,21 +119,23 @@ export function AdminControls() {
           <p className="text-content-400 mb-3 text-xs">
             Visible to admin only; participants see these after the timer ends.
           </p>
-          <ul className="mb-4 space-y-2">
+          <ul className="mb-4 space-y-3">
             {submissionsForCurrent.map((s) => (
               <li
                 key={s.id}
-                className={`flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm ${
+                className={`rounded-lg border px-3 py-2 text-sm ${
                   s.isAi
                     ? "border-alert-content-100/40 bg-bg-1200/10 text-content-100"
                     : "border-border-400 bg-bg-900/50 text-content-200"
                 }`}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-content-300">
                   {s.isAi && <Cpu className="h-3.5 w-3.5 text-alert-content-100" />}
                   <span className="font-medium">{s.teamName}</span>
                 </div>
-                <p className="min-w-0 flex-1 truncate text-content-300">{s.answerSnippet}</p>
+                <p className="mt-2 whitespace-pre-wrap break-words text-content-200 text-xs leading-relaxed">
+                  {s.answerSnippet}
+                </p>
               </li>
             ))}
           </ul>
@@ -199,30 +201,32 @@ export function AdminControls() {
 
       <section className="rounded-xl border border-border-400 bg-bg-800 p-4 shadow-elevated-card">
         <h2 className="text-content-200 mb-3 font-medium">Post AI answer</h2>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
-          <input
-            type="number"
-            min={1}
-            max={2}
-            value={questionNum}
-            onChange={(e) => setQuestionNum(parseInt(e.target.value, 10) || 1)}
-            className="w-16 rounded border border-border-400 bg-bg-700 px-2 py-2 text-content-100 text-sm"
-          />
-          <input
-            type="text"
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={1}
+              max={2}
+              value={questionNum}
+              onChange={(e) => setQuestionNum(parseInt(e.target.value, 10) || 1)}
+              className="w-16 rounded border border-border-400 bg-bg-700 px-2 py-2 text-content-100 text-sm"
+            />
+            <button
+              type="button"
+              onClick={handlePostAiAnswer}
+              className="inline-flex items-center gap-2 rounded-lg bg-bg-1200 px-4 py-2 text-content-100 text-sm font-medium hover:opacity-90"
+            >
+              <Send className="h-4 w-4" />
+              Post
+            </button>
+          </div>
+          <textarea
             value={aiAnswer}
             onChange={(e) => setAiAnswer(e.target.value)}
-            className="flex-1 rounded border border-border-400 bg-bg-700 px-3 py-2 text-content-100 text-sm placeholder:text-content-300"
-            placeholder="Answer snippet..."
+            rows={4}
+            className="w-full rounded border border-border-400 bg-bg-700 px-3 py-2 text-content-100 text-sm placeholder:text-content-300 resize-y"
+            placeholder="AI answer (multiple lines allowed)..."
           />
-          <button
-            type="button"
-            onClick={handlePostAiAnswer}
-            className="inline-flex items-center gap-2 rounded-lg bg-bg-1200 px-4 py-2 text-content-100 text-sm font-medium hover:opacity-90"
-          >
-            <Send className="h-4 w-4" />
-            Post
-          </button>
         </div>
       </section>
 
