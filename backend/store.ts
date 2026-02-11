@@ -1,7 +1,8 @@
-import type { GameState, Phase, Submission, Team } from "./types";
+import type { GameState, Participant, Phase, Submission } from "./types";
 import {
+  AETHERION_ID,
   DEFAULT_AETHERION_THOUGHT,
-  INITIAL_TEAMS,
+  INITIAL_PARTICIPANTS,
   QUESTION_DURATION_MS,
 } from "./constants";
 
@@ -12,7 +13,7 @@ function nextId(prefix: string): string {
 let state: GameState = {
   phase: "idle",
   questionEndTime: null,
-  teams: [...INITIAL_TEAMS],
+  participants: [...INITIAL_PARTICIPANTS],
   submissions: [],
   aetherionThought: DEFAULT_AETHERION_THOUGHT,
 };
@@ -28,7 +29,6 @@ export function startQuestion(question: 1 | 2): GameState {
   return getState();
 }
 
-/** End current question timer immediately (e.g. everyone answered or admin wants to stop). */
 export function endTimer(): GameState {
   if (state.phase === "q1" || state.phase === "q2") {
     state.questionEndTime = Date.now();
@@ -47,42 +47,76 @@ export function nextQuestion(): GameState {
   return getState();
 }
 
+function findOrCreateParticipant(name: string, rollNumber: string): Participant {
+  const existing = state.participants.find(
+    (p) => !p.isAi && p.name === name.trim() && p.rollNumber === rollNumber.trim()
+  );
+  if (existing) return existing;
+  const newParticipant: Participant = {
+    id: nextId("p"),
+    name: name.trim(),
+    rollNumber: rollNumber.trim(),
+    points: 0,
+    isAi: false,
+  };
+  state.participants.push(newParticipant);
+  return newParticipant;
+}
+
 export function addSubmission(
-  teamId: string,
-  teamName: string,
+  participantName: string,
+  participantRollNumber: string,
   questionNum: number,
   answerSnippet: string,
   isAi: boolean
 ): GameState {
-  // One answer per team per question (skip duplicate; AI can post multiple)
   if (!isAi) {
+    const key = `${participantName.trim()}|${participantRollNumber.trim()}`;
     const alreadyAnswered = state.submissions.some(
-      (s) => s.teamName === teamName && s.questionNum === questionNum
+      (s) =>
+        !s.isAi &&
+        s.participantName.trim() === participantName.trim() &&
+        s.participantRollNumber.trim() === participantRollNumber.trim() &&
+        s.questionNum === questionNum
     );
     if (alreadyAnswered) return getState();
+    const participant = findOrCreateParticipant(participantName, participantRollNumber);
+    const sub: Submission = {
+      id: nextId("sub"),
+      participantId: participant.id,
+      participantName: participant.name,
+      participantRollNumber: participant.rollNumber,
+      questionNum,
+      answerSnippet,
+      isAi: false,
+      createdAt: Date.now(),
+    };
+    state.submissions.unshift(sub);
+    return getState();
   }
   const sub: Submission = {
     id: nextId("sub"),
-    teamName,
+    participantId: AETHERION_ID,
+    participantName: "Aetherion AI Agent",
+    participantRollNumber: "",
     questionNum,
     answerSnippet,
-    isAi,
+    isAi: true,
     createdAt: Date.now(),
   };
   state.submissions.unshift(sub);
   return getState();
 }
 
-export function addPoints(teamId: string, points: number): GameState {
-  const team = state.teams.find((t) => t.id === teamId);
-  if (team) team.points = Math.max(0, team.points + points);
+export function addPoints(participantId: string, points: number): GameState {
+  const p = state.participants.find((t) => t.id === participantId);
+  if (p) p.points = Math.max(0, p.points + points);
   return getState();
 }
 
-/** Set a team's score to a value (e.g. 0 to clear). */
-export function setScore(teamId: string, score: number): GameState {
-  const team = state.teams.find((t) => t.id === teamId);
-  if (team) team.points = Math.max(0, score);
+export function setScore(participantId: string, score: number): GameState {
+  const p = state.participants.find((t) => t.id === participantId);
+  if (p) p.points = Math.max(0, score);
   return getState();
 }
 
@@ -92,20 +126,14 @@ export function setAetherionThought(thought: string): GameState {
 }
 
 export function postAiAnswer(questionNum: number, answerSnippet: string): GameState {
-  return addSubmission(
-    "aetherion",
-    "Aetherion AI Agent",
-    questionNum,
-    answerSnippet,
-    true
-  );
+  return addSubmission("", "", questionNum, answerSnippet, true);
 }
 
 export function reset(): GameState {
   state = {
     phase: "idle",
     questionEndTime: null,
-    teams: [...INITIAL_TEAMS],
+    participants: [...INITIAL_PARTICIPANTS],
     submissions: [],
     aetherionThought: DEFAULT_AETHERION_THOUGHT,
   };

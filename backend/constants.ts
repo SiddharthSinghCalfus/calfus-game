@@ -1,20 +1,10 @@
-import type { Team } from "./types";
+import type { Participant } from "./types";
 import type { Question, AnswerField } from "./types";
 
-export const TEAM_IDS = {
-  TEAM_1: "team-1",
-  TEAM_2: "team-2",
-  TEAM_3: "team-3",
-  TEAM_4: "team-4",
-  AETHERION: "aetherion",
-} as const;
+export const AETHERION_ID = "aetherion";
 
-export const INITIAL_TEAMS: Team[] = [
-  { id: TEAM_IDS.TEAM_1, name: "Team 1", points: 0, isAi: false },
-  { id: TEAM_IDS.TEAM_2, name: "Team 2", points: 0, isAi: false },
-  { id: TEAM_IDS.TEAM_3, name: "Team 3", points: 0, isAi: false },
-  { id: TEAM_IDS.TEAM_4, name: "Team 4", points: 0, isAi: false },
-  { id: TEAM_IDS.AETHERION, name: "Aetherion AI Agent", points: 0, isAi: true },
+export const INITIAL_PARTICIPANTS: Participant[] = [
+  { id: AETHERION_ID, name: "Aetherion AI Agent", rollNumber: "", points: 0, isAi: true },
 ];
 
 export const DEFAULT_AETHERION_THOUGHT = "Idle — awaiting task.";
@@ -71,21 +61,12 @@ const Q1_ANSWER_FIELDS: AnswerField[] = [
 ];
 
 const Q2_RULES = {
-  prohibited: [
-    "ChatGPT (any version)",
-    "Google Gemini / Bard",
-    "Claude AI",
-    "Perplexity",
-    "Microsoft Copilot",
-    "Any other AI chatbot or LLM tool",
-  ],
+  prohibited: [],
   allowed: [
-    "Google Search only",
+    "Any tools (Google Search, ChatGPT, Gemini, Claude, Perplexity, Copilot, etc.)",
   ],
   disqualification: [
-    "Use of any LLM/AI chatbot tool",
     "Submission after the 3-minute timer ends",
-    "Using any tool other than Google Search",
     "Submitting someone else's answer (cheating)",
   ],
 };
@@ -98,7 +79,7 @@ The interviewer has sent you the following:
 
 "Tomorrow's case study will focus on our recent partnership with supplywhy.ai. Please research this company thoroughly before the interview."
 
-Your task: Answer five research questions about this company. Time limit: 10 minutes total (2 minutes per question). Tools allowed: Google Search only. Use of ChatGPT, Gemini, or any other AI tool is not permitted.`;
+Your task: Research this company thoroughly before the interview. Time limit: 3 minutes.`;
 
 export const QUESTIONS: Question[] = [
   {

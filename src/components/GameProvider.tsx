@@ -14,16 +14,19 @@ const API = "/api/game";
 
 export type Phase = "idle" | "q1" | "q2";
 
-export interface Team {
+export interface Participant {
   id: string;
   name: string;
+  rollNumber: string;
   points: number;
   isAi: boolean;
 }
 
 export interface Submission {
   id: string;
-  teamName: string;
+  participantId: string;
+  participantName: string;
+  participantRollNumber: string;
   questionNum: number;
   answerSnippet: string;
   isAi: boolean;
@@ -33,7 +36,7 @@ export interface Submission {
 export interface GameState {
   phase: Phase;
   questionEndTime: number | null;
-  teams: Team[];
+  participants: Participant[];
   submissions: Submission[];
   aetherionThought: string;
   questions?: { num: number; text: string }[];
@@ -45,9 +48,9 @@ type GameContextValue = GameState & {
   startQuestion: (question: 1 | 2) => Promise<void>;
   endTimer: () => Promise<void>;
   nextQuestion: () => Promise<void>;
-  submitAnswer: (teamId: string, teamName: string, questionNum: number, answerSnippet: string) => Promise<void>;
-  addPoints: (teamId: string, points: number) => Promise<void>;
-  setScore: (teamId: string, score: number) => Promise<void>;
+  submitAnswer: (participantName: string, participantRollNumber: string, questionNum: number, answerSnippet: string) => Promise<void>;
+  addPoints: (participantId: string, points: number) => Promise<void>;
+  setScore: (participantId: string, score: number) => Promise<void>;
   setAetherionThought: (thought: string) => Promise<void>;
   postAiAnswer: (questionNum: number, answerSnippet: string) => Promise<void>;
   resetGame: () => Promise<void>;
@@ -57,7 +60,7 @@ type GameContextValue = GameState & {
 const initial: GameState = {
   phase: "idle",
   questionEndTime: null,
-  teams: [],
+  participants: [],
   submissions: [],
   aetherionThought: "Idle — awaiting task.",
   questions: [],
@@ -137,8 +140,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const submitAnswer = useCallback(
     async (
-      teamId: string,
-      teamName: string,
+      participantName: string,
+      participantRollNumber: string,
       questionNum: number,
       answerSnippet: string
     ) => {
@@ -146,8 +149,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          teamId,
-          teamName,
+          participantName,
+          participantRollNumber,
           questionNum,
           answerSnippet,
         }),
@@ -157,20 +160,20 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const addPoints = useCallback(async (teamId: string, points: number) => {
+  const addPoints = useCallback(async (participantId: string, points: number) => {
     const data = await fetchJson<GameState>(`${API}/admin/add-points`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId, points }),
+      body: JSON.stringify({ participantId, points }),
     });
     setState(data);
   }, []);
 
-  const setScore = useCallback(async (teamId: string, score: number) => {
+  const setScore = useCallback(async (participantId: string, score: number) => {
     const data = await fetchJson<GameState>(`${API}/admin/set-score`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ teamId, score }),
+      body: JSON.stringify({ participantId, score }),
     });
     setState(data);
   }, []);

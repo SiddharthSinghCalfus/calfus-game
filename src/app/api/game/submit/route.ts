@@ -3,21 +3,21 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { teamId, teamName, questionNum, answerSnippet } = body ?? {};
+  const { participantName, participantRollNumber, questionNum, answerSnippet } = body ?? {};
   if (
-    typeof teamId !== "string" ||
-    typeof teamName !== "string" ||
+    typeof participantName !== "string" ||
+    typeof participantRollNumber !== "string" ||
     typeof questionNum !== "number" ||
     typeof answerSnippet !== "string"
   ) {
     return NextResponse.json(
-      { error: "teamId, teamName, questionNum, answerSnippet required" },
+      { error: "participantName, participantRollNumber, questionNum, answerSnippet required" },
       { status: 400 }
     );
   }
   const state = addSubmission(
-    teamId,
-    teamName,
+    participantName,
+    participantRollNumber,
     questionNum,
     answerSnippet.trim() || "(No text)",
     false

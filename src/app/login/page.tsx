@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function LoginPage() {
   const { user, ready, login } = useAuth();
   const router = useRouter();
-  const [who, setWho] = useState("team1");
+  const [who, setWho] = useState("participant");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -29,7 +29,7 @@ export default function LoginPage() {
     }
     login(user);
     if (user.role === "admin") router.push("/admin");
-    else router.push("/play");
+    else router.push("/");
   };
 
   if (!ready || user) {

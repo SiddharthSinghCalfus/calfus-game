@@ -49,7 +49,10 @@ export function SubmissionFeed() {
               >
                 <div className="flex items-center gap-2 text-content-300">
                   {s.isAi && <Cpu className="h-3.5 w-3.5 text-alert-content-100" />}
-                  <span className="font-medium">{s.teamName}</span>
+                  <span className="font-medium">{s.participantName}</span>
+                  {s.participantRollNumber && (
+                    <span className="text-content-400">({s.participantRollNumber})</span>
+                  )}
                   <span>Q{s.questionNum}</span>
                 </div>
                 <p className="mt-2 whitespace-pre-wrap break-words text-content-200 text-xs leading-relaxed">

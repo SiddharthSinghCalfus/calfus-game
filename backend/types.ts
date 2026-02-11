@@ -1,6 +1,7 @@
-export interface Team {
+export interface Participant {
   id: string;
   name: string;
+  rollNumber: string;
   points: number;
   isAi: boolean;
 }
@@ -27,7 +28,9 @@ export interface Question {
 
 export interface Submission {
   id: string;
-  teamName: string;
+  participantId: string;
+  participantName: string;
+  participantRollNumber: string;
   questionNum: number;
   answerSnippet: string;
   isAi: boolean;
@@ -39,7 +42,7 @@ export type Phase = "idle" | "q1" | "q2";
 export interface GameState {
   phase: Phase;
   questionEndTime: number | null;
-  teams: Team[];
+  participants: Participant[];
   submissions: Submission[];
   aetherionThought: string;
 }

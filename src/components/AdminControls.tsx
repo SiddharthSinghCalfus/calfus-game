@@ -10,14 +10,14 @@ const POINTS_OPTIONS = [10, 20, 50] as const;
 const SUBTRACT_OPTIONS = [10, 20, 50] as const;
 const SCORE_CONFIRM_MS = 2000;
 
-type ScoreFeedback = { teamName: string; type: "add"; points: number } | { teamName: string; type: "subtract"; points: number } | { teamName: string; type: "clear" };
+type ScoreFeedback = { participantName: string; type: "add"; points: number } | { participantName: string; type: "subtract"; points: number } | { participantName: string; type: "clear" };
 
 export function AdminControls() {
   const {
     phase,
     currentQuestion,
     timeRemainingMs,
-    teams,
+    participants,
     submissions,
     addPoints,
     setScore,
@@ -131,7 +131,10 @@ export function AdminControls() {
               >
                 <div className="flex items-center gap-2 text-content-300">
                   {s.isAi && <Cpu className="h-3.5 w-3.5 text-alert-content-100" />}
-                  <span className="font-medium">{s.teamName}</span>
+                  <span className="font-medium">{s.participantName}</span>
+                  {s.participantRollNumber && (
+                    <span className="text-content-400">({s.participantRollNumber})</span>
+                  )}
                 </div>
                 <p className="mt-2 whitespace-pre-wrap break-words text-content-200 text-xs leading-relaxed">
                   {s.answerSnippet}
@@ -147,22 +150,24 @@ export function AdminControls() {
         {scoreFeedback && (
           <p className="mb-3 inline-flex items-center gap-2 rounded-lg bg-alert-content-100/20 px-3 py-2 text-alert-content-100 text-sm">
             <Check className="h-4 w-4" />
-            {scoreFeedback.type === "add" && `Added +${scoreFeedback.points} to ${scoreFeedback.teamName}`}
-            {scoreFeedback.type === "subtract" && `Removed ${scoreFeedback.points} from ${scoreFeedback.teamName}`}
-            {scoreFeedback.type === "clear" && `Cleared ${scoreFeedback.teamName} score`}
+            {scoreFeedback.type === "add" && `Added +${scoreFeedback.points} to ${scoreFeedback.participantName}`}
+            {scoreFeedback.type === "subtract" && `Removed ${scoreFeedback.points} from ${scoreFeedback.participantName}`}
+            {scoreFeedback.type === "clear" && `Cleared ${scoreFeedback.participantName} score`}
           </p>
         )}
         <div className="space-y-3">
-          {teams.map((team) => (
-            <div key={team.id} className="flex flex-wrap items-center gap-2">
-              <span className="text-content-200 w-36 text-sm">{team.name}</span>
+          {participants.map((p) => (
+            <div key={p.id} className="flex flex-wrap items-center gap-2">
+              <span className="text-content-200 w-40 truncate text-sm" title={p.rollNumber ? `${p.name} (${p.rollNumber})` : p.name}>
+                {p.name}{p.rollNumber ? ` (${p.rollNumber})` : ""}
+              </span>
               {POINTS_OPTIONS.map((pts) => (
                 <button
                   key={`+${pts}`}
                   type="button"
                   onClick={async () => {
-                    await addPoints(team.id, pts);
-                    setScoreFeedback({ teamName: team.name, type: "add", points: pts });
+                    await addPoints(p.id, pts);
+                    setScoreFeedback({ participantName: p.name, type: "add", points: pts });
                   }}
                   className="rounded-lg border border-border-400 bg-bg-700 px-3 py-1.5 text-content-200 text-sm hover:bg-bg-600"
                 >
@@ -174,8 +179,8 @@ export function AdminControls() {
                   key={`-${pts}`}
                   type="button"
                   onClick={async () => {
-                    await addPoints(team.id, -pts);
-                    setScoreFeedback({ teamName: team.name, type: "subtract", points: pts });
+                    await addPoints(p.id, -pts);
+                    setScoreFeedback({ participantName: p.name, type: "subtract", points: pts });
                   }}
                   className="rounded-lg border border-border-400 border-content-300/50 bg-bg-700 px-3 py-1.5 text-content-300 text-sm hover:bg-bg-600"
                   title="Remove points"
@@ -186,8 +191,8 @@ export function AdminControls() {
               <button
                 type="button"
                 onClick={async () => {
-                  await setScore(team.id, 0);
-                  setScoreFeedback({ teamName: team.name, type: "clear" });
+                  await setScore(p.id, 0);
+                  setScoreFeedback({ participantName: p.name, type: "clear" });
                 }}
                 className="rounded-lg border border-alert-content-200/50 bg-bg-700 px-3 py-1.5 text-alert-content-200 text-sm hover:bg-bg-600"
                 title="Clear score to 0"

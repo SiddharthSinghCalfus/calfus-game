@@ -36,6 +36,8 @@ export default function PlayPage() {
     submitAnswer,
   } = useGame();
 
+  const [participantName, setParticipantName] = useState("");
+  const [participantRollNumber, setParticipantRollNumber] = useState("");
   const [answer, setAnswer] = useState("");
   const [fieldValues, setFieldValues] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
@@ -65,15 +67,19 @@ export default function PlayPage() {
   }, [currentQuestion]); // eslint-disable-line react-hooks/exhaustive-deps -- only reset when question changes, not when questions ref changes from poll
 
   const alreadyAnswered =
-    user?.role === "team" &&
+    user?.role === "participant" &&
     currentQuestion != null &&
     (submissions.some(
-      (s) => s.teamName === user.teamName && s.questionNum === currentQuestion
+      (s) =>
+        !s.isAi &&
+        s.participantName.trim() === participantName.trim() &&
+        s.participantRollNumber.trim() === participantRollNumber.trim() &&
+        s.questionNum === currentQuestion
     ) ||
       submitted);
 
   const canSubmit =
-    user?.role === "team" &&
+    user?.role === "participant" &&
     phase !== "idle" &&
     currentQuestion != null &&
     !timerExpired &&
@@ -81,7 +87,10 @@ export default function PlayPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit || !user || user.role !== "team") return;
+    if (!canSubmit || !user || user.role !== "participant") return;
+    const name = participantName.trim();
+    const roll = participantRollNumber.trim();
+    if (!name || !roll) return;
     const payload =
       question?.answerFields != null && question.answerFields.length > 0
         ? question.answerFields
@@ -89,7 +98,7 @@ export default function PlayPage() {
             .join("\n\n")
         : answer.trim();
     if (!payload) return;
-    submitAnswer(user.teamId, user.teamName, currentQuestion!, payload);
+    submitAnswer(name, roll, currentQuestion!, payload);
     setAnswer("");
     setFieldValues(question?.answerFields?.map(() => "") ?? []);
     setSubmitted(true);
@@ -97,6 +106,8 @@ export default function PlayPage() {
 
   const canSubmitForm =
     canSubmit &&
+    participantName.trim().length > 0 &&
+    participantRollNumber.trim().length > 0 &&
     (question?.answerFields != null
       ? fieldValues.some((v) => v.trim().length > 0)
       : answer.trim().length > 0);
@@ -126,8 +137,8 @@ export default function PlayPage() {
           <Link href="/" className="text-content-300 text-sm hover:text-content-100">
             Leaderboard
           </Link>
-          {user?.role === "team" && (
-            <span className="text-content-300 text-sm">Logged in as {user.teamName}</span>
+          {user?.role === "participant" && (
+            <span className="text-content-300 text-sm">Logged in as Participant</span>
           )}
         </div>
 
@@ -178,7 +189,7 @@ export default function PlayPage() {
           </div>
         )}
 
-        {user?.role === "team" && alreadyAnswered && (
+        {user?.role === "participant" && alreadyAnswered && (
           <div className="glass-card rounded-2xl border border-alert-content-100/40 bg-bg-1200/10 p-6 shadow-elevated-card">
             <p className="text-alert-content-100 text-center text-lg font-medium">
               Submission received
@@ -189,14 +200,38 @@ export default function PlayPage() {
           </div>
         )}
 
-        {user?.role === "team" && !alreadyAnswered && (
+        {user?.role === "participant" && !alreadyAnswered && (
           <form
             onSubmit={handleSubmit}
             className="glass-card rounded-2xl border border-border-400 p-6 shadow-elevated-card"
           >
-            <p className="text-content-200 mb-4 text-sm font-medium">
-              Your submission ({user.teamName}) — fill in the fields below and submit
+            <p className="text-content-200 mb-3 text-sm font-medium">
+              Your submission — enter your name and roll number, then fill in the fields below
             </p>
+            <div className="mb-4 flex flex-wrap gap-4 sm:flex-nowrap">
+              <div className="min-w-0 flex-1">
+                <label className="text-content-400 mb-1 block text-xs font-medium uppercase">Your name</label>
+                <input
+                  type="text"
+                  value={participantName}
+                  onChange={(e) => setParticipantName(e.target.value)}
+                  className="w-full rounded-md border border-border-400 bg-bg-800 px-3 py-2 text-content-100 text-sm"
+                  placeholder="Full name"
+                  required
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <label className="text-content-400 mb-1 block text-xs font-medium uppercase">College roll number</label>
+                <input
+                  type="text"
+                  value={participantRollNumber}
+                  onChange={(e) => setParticipantRollNumber(e.target.value)}
+                  className="w-full rounded-md border border-border-400 bg-bg-800 px-3 py-2 text-content-100 text-sm"
+                  placeholder="Roll number"
+                  required
+                />
+              </div>
+            </div>
             {question?.answerFields != null && question.answerFields.length > 0 ? (
               <div className="space-y-4">
                 {question.answerFields.map((field, i) => (
@@ -268,7 +303,7 @@ export default function PlayPage() {
         {!user && (
           <p className="text-content-300 text-center text-sm">
             <Link href="/login" className="text-content-200 hover:underline">
-              Log in as a team
+              Log in as Participant
             </Link>{" "}
             to submit answers.
           </p>

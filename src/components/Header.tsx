@@ -28,7 +28,7 @@ export function Header() {
         {user ? (
           <>
             <span className="text-content-300 text-sm">
-              {user.role === "admin" ? "Admin" : user.teamName}
+              {user.role === "admin" ? "Admin" : "Participant"}
             </span>
             <Link
               href={user.role === "admin" ? "/admin" : "/play"}
