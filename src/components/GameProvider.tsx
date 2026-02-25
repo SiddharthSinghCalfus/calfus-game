@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-const POLL_MS = 1500;
+const POLL_MS = 20000;
 const API = "/api/game";
 
 export type Phase = "idle" | "q1" | "q2";
